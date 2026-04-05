@@ -223,7 +223,6 @@ export const AppSidebar = memo(function AppSidebar({
               return (
                 <ProjectSection
                   key={project.id}
-                  islandLayout={islandLayout}
                   project={project}
                   sessions={projectSessions}
                   activeSessionId={activeSessionId}

@@ -116,6 +116,10 @@ contextBridge.exposeInMainWorld("claude", {
   openExternal: (url: string) => ipcRenderer.invoke("shell:open-external", url),
   generateTitle: (message: string, cwd?: string, engine?: string, sessionId?: string) =>
     ipcRenderer.invoke("claude:generate-title", { message, cwd, engine, sessionId }),
+  menu: {
+    showPopup: (options: { items: Array<{ id: string; label: string }>; x: number; y: number }) =>
+      ipcRenderer.invoke("menu:popup", options) as Promise<{ selectedId: string | null }>,
+  },
   projects: {
     list: () => ipcRenderer.invoke("projects:list"),
     create: (spaceId?: string) => ipcRenderer.invoke("projects:create", spaceId),

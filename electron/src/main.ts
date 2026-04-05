@@ -166,6 +166,47 @@ ipcMain.handle("clipboard:write-text", (_event, text: string) => {
   }
 });
 
+/** Native OS menu at window coordinates (DIP, relative to web contents). */
+ipcMain.handle(
+  "menu:popup",
+  async (
+    event,
+    payload: { items: Array<{ id: string; label: string }>; x: number; y: number },
+  ): Promise<{ selectedId: string | null }> => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win || !payload?.items?.length) {
+      return { selectedId: null };
+    }
+    const x = Math.round(Number(payload.x));
+    const y = Math.round(Number(payload.y));
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+      return { selectedId: null };
+    }
+
+    return await new Promise<{ selectedId: string | null }>((resolve) => {
+      let settled = false;
+      const finish = (id: string | null) => {
+        if (settled) return;
+        settled = true;
+        resolve({ selectedId: id });
+      };
+
+      const menu = Menu.buildFromTemplate(
+        payload.items.map((item) => ({
+          label: item.label,
+          click: () => finish(item.id),
+        })),
+      );
+
+      menu.once("menu-will-close", () => {
+        setTimeout(() => finish(null), 0);
+      });
+
+      menu.popup({ window: win, x, y });
+    });
+  },
+);
+
 // Dynamic minimum window width — renderer calculates the base layout floor.
 // Keep the current window size unchanged so opening panels compresses the center
 // content instead of forcing the BrowserWindow wider.

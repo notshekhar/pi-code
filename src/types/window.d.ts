@@ -96,6 +96,13 @@ declare global {
         engine?: EngineId,
         sessionId?: string,
       ) => Promise<{ title?: string; error?: string }>;
+      menu: {
+        showPopup: (options: {
+          items: Array<{ id: string; label: string }>;
+          x: number;
+          y: number;
+        }) => Promise<{ selectedId: string | null }>;
+      };
       log: (label: string, data: unknown) => void;
       onEvent: (callback: (event: ClaudeEvent & { _sessionId: string }) => void) => () => void;
       onStderr: (callback: (data: { data: string; _sessionId: string }) => void) => () => void;

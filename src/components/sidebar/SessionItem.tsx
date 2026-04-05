@@ -1,18 +1,11 @@
-import { useState } from "react";
-import { Pencil, Trash2, MoreHorizontal, Loader2 } from "lucide-react";
+import { useState, type MouseEvent } from "react";
+import { MoreHorizontal, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { ChatSession, InstalledAgent } from "@/types";
 import { AgentIcon } from "@/components/AgentIcon";
 import { getSessionEngineIcon } from "@/lib/engine-icons";
 
 export function SessionItem({
-  islandLayout,
   session,
   isActive,
   onSelect,
@@ -20,7 +13,6 @@ export function SessionItem({
   onRename,
   agents,
 }: {
-  islandLayout: boolean;
   session: ChatSession;
   isActive: boolean;
   onSelect: () => void;
@@ -37,6 +29,30 @@ export function SessionItem({
       onRename(trimmed);
     }
     setIsEditing(false);
+  };
+
+  const openSessionMenu = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    try {
+      const { selectedId } = await window.claude.menu.showPopup({
+        items: [
+          { id: "rename", label: "Rename" },
+          { id: "delete", label: "Delete" },
+        ],
+        x: Math.round(rect.left),
+        y: Math.round(rect.bottom),
+      });
+      if (selectedId === "rename") {
+        setEditTitle(session.title);
+        setIsEditing(true);
+      } else if (selectedId === "delete") {
+        onDelete();
+      }
+    } catch {
+      /* non-Electron or IPC failure */
+    }
   };
 
   if (isEditing) {
@@ -90,42 +106,15 @@ export function SessionItem({
       </button>
 
       <div className="absolute end-1.5 top-1/2 -translate-y-1/2 opacity-0 transition-all group-hover:opacity-100">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 rounded-md text-sidebar-foreground/60 hover:bg-black/10 hover:text-sidebar-foreground dark:hover:bg-white/10"
-            >
-              <MoreHorizontal className="h-3.5 w-3.5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className={
-              islandLayout
-                ? "w-36 border-none bg-transparent shadow-[0_14px_34px_-10px_color-mix(in_oklab,var(--foreground)_40%,transparent)]"
-                : "w-36"
-            }
-          >
-            <DropdownMenuItem
-              onClick={() => {
-                setEditTitle(session.title);
-                setIsEditing(true);
-              }}
-            >
-              <Pencil className="me-2 h-3.5 w-3.5" />
-              Rename
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
-              onClick={onDelete}
-            >
-              <Trash2 className="me-2 h-3.5 w-3.5" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 rounded-md text-sidebar-foreground/60 hover:bg-black/10 hover:text-sidebar-foreground dark:hover:bg-white/10"
+          onClick={openSessionMenu}
+        >
+          <MoreHorizontal className="h-3.5 w-3.5" />
+        </Button>
       </div>
     </div>
   );

@@ -79,7 +79,6 @@ function groupSessionsByDate(sessions: ChatSession[]): SessionGroup[] {
 }
 
 export function ProjectSection({
-  islandLayout,
   project,
   sessions,
   activeSessionId,
@@ -100,7 +99,6 @@ export function ProjectSection({
   defaultChatLimit,
   agents,
 }: {
-  islandLayout: boolean;
   project: Project;
   sessions: ChatSession[];
   activeSessionId: string | null;
@@ -377,7 +375,6 @@ export function ProjectSection({
                 {group.sessions.map((session) => (
                   <SessionItem
                     key={session.id}
-                    islandLayout={islandLayout}
                     session={session}
                     isActive={session.id === activeSessionId}
                     onSelect={() => onSelectSession(session.id)}
