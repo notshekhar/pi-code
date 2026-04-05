@@ -56,7 +56,7 @@ export function guessLanguage(code: string): string | null {
 
   // Shell commands (lines starting with $ or common CLI commands)
   if (/^\$\s/m.test(trimmed) ||
-      /^(npm|pnpm|yarn|git|cd|mkdir|echo|curl|wget|pip|brew|apt|sudo|docker|cargo|go)\s/m.test(trimmed)) {
+      /^(npm|pnpm|yarn|bun|git|cd|mkdir|echo|curl|wget|pip|brew|apt|sudo|docker|cargo|go)\s/m.test(trimmed)) {
     return "bash";
   }
 

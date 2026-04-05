@@ -1,5 +1,5 @@
 // macOS notarization hook for electron-builder
-// Requires: pnpm add -D @electron/notarize
+// Requires: bun add -d @electron/notarize
 // Requires: APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, APPLE_TEAM_ID env vars
 
 exports.default = async function notarizing(context) {

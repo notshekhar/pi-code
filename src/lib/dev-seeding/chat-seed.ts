@@ -51,7 +51,7 @@ export function buildDevExampleConversation(base = Date.now()): {
       role: "tool_call",
       content: "",
       toolName: "Bash",
-      toolInput: { command: "pnpm -s test -- --runInBand" },
+      toolInput: { command: "bun run test" },
       toolResult: {
         stdout: "PASS src/components/mcp-renderers/jira.test.tsx\n1 passed, 0 failed",
       },

@@ -57,8 +57,8 @@ Compare with the version in `package.json` under `dependencies["@anthropic-ai/Co
 2. Stage it: `git add package.json`
 3. If the SDK was updated, also run:
    ```bash
-   pnpm install
-   git add package.json pnpm-lock.yaml
+   bun install
+   git add package.json bun.lock
    ```
 
 ## Step 3: Commit
@@ -159,4 +159,4 @@ Output the release URL when done so the user can verify.
 - Repo: `https://github.com/notshekhar/pi-code`
 - Main branch: `master`
 - Changelog URL format: `https://github.com/notshekhar/pi-code/compare/v{prev}...v{current}`
-- Package manager: `pnpm` (never use npm or yarn for installs)
+- Package manager: `bun` (lockfile: `bun.lock`)

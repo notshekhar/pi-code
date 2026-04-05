@@ -39,7 +39,7 @@ Closes #
 ## Checklist
 
 - [ ] I've tested this on macOS (required for Electron/native features)
-- [ ] TypeScript compiles with no errors (`pnpm build`)
+- [ ] TypeScript compiles with no errors (`bun run build`)
 - [ ] No `any` types introduced
 - [ ] Logical margins used (`ms-*`/`me-*` instead of `ml-*`/`mr-*`)
 - [ ] User-generated content containers have `wrap-break-word`

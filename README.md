@@ -191,16 +191,16 @@ MCP servers are configured per project through the **MCP Servers panel** in the 
 ```bash
 git clone https://github.com/notshekhar/pi-code.git
 cd pi-code
-pnpm install
-pnpm dev
+bun install
+bun run dev
 ```
 
 ### Build installers
 
 ```bash
-pnpm dist:mac      # macOS DMG (arm64 + x64)
-pnpm dist:win      # Windows NSIS installer (x64 + ARM64)
-pnpm dist:linux    # Linux AppImage + deb
+bun run dist:mac      # macOS DMG (arm64 + x64)
+bun run dist:win      # Windows NSIS installer (x64 + ARM64)
+bun run dist:linux    # Linux AppImage + deb
 ```
 
 ---
@@ -209,7 +209,7 @@ pnpm dist:linux    # Linux AppImage + deb
 
 1. Fork the repo and create a feature branch
 2. Follow the conventions in `CLAUDE.md`
-3. Test with `pnpm dev`
+3. Test with `bun run dev`
 4. Open a pull request
 
 ---

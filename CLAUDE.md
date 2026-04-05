@@ -15,7 +15,7 @@ Open-source desktop client for the Agent Client Protocol. Uses the `@anthropic-a
 - **SDK**: @anthropic-ai/claude-agent-sdk (ESM-only, async-imported from CommonJS)
 - **Terminal**: node-pty (main process) + @xterm/xterm + @xterm/addon-fit (renderer)
 - **Browser**: Electron `<webview>` tag (requires `webviewTag: true` in webPreferences)
-- **Package manager**: pnpm
+- **Package manager**: Bun
 - **Path aliases**: `@/` → `./src/`, `@shared/` → `./shared/`
 
 ## Project Structure
@@ -56,10 +56,10 @@ src/
 ## How to Run
 
 ```bash
-pnpm install
-pnpm dev       # Starts Vite dev server + tsup watch + Electron
-pnpm build     # tsup (electron/) + Vite (renderer) production build
-pnpm start     # Run Electron with pre-built dist/
+bun install
+bun run dev    # Starts Vite dev server + tsup watch + Electron
+bun run build  # tsup (electron/) + Vite (renderer) production build
+bun run start  # Run Electron with pre-built dist/
 ```
 
 **Dev logs**: Main process logs go to `logs/main-{timestamp}.log` (dev) or `{userData}/logs/main-{timestamp}.log` (packaged). Check the latest file with `ls -t logs/main-*.log | head -1 | xargs cat`.
@@ -348,7 +348,7 @@ The three session IPC handlers share extracted utilities:
 - **No `any`** — use proper types, never `as any`
 - **No unsafe `as` casts** — use discriminated unions and type guards instead of `as Record<string, unknown>`
 - **No false optionals** — never mark props/parameters as optional (`?`) when they are always provided by every caller. Optional means "sometimes absent" — if every call site passes the value, make it required. Lazy `?` hides broken contracts and leads to unnecessary null checks.
-- **pnpm** — always use pnpm for package management
+- **Bun** — use Bun for installs and `bun run` scripts (`bun.lock` is the lockfile)
 - **Memo optimization** — components use `React.memo` with custom comparators for performance
 - **Component decomposition** — large components are split into focused sub-components in subdirectories (git/, tool-renderers/, mcp-renderers/, sidebar/)
 - **Hook decomposition** — large hooks are split into focused sub-hooks (session/, useEngineBase)

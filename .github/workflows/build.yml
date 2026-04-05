@@ -35,20 +35,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: pnpm
+          bun-version: 1.3.11
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Run tests
-        run: pnpm test
+        run: bun run test
 
   # macOS: build both arm64 + x64 in one job so electron-builder writes a single
   # latest-mac.yml containing both architectures. Separate jobs race and the last
@@ -61,27 +57,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: pnpm
+          bun-version: 1.3.11
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Build app
-        run: pnpm build
+        run: bun run build
 
       - name: Package (mac arm64 + x64)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: >
-          pnpm exec electron-builder
+          bunx electron-builder
           --mac
           --arm64 --x64
           --config electron-builder.config.js
@@ -109,26 +101,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: pnpm
+          bun-version: 1.3.11
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Build app
-        run: pnpm build
+        run: bun run build
 
       - name: Package (win x64 + arm64)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
-          pnpm exec electron-builder
+          bunx electron-builder
           --win
           --x64 --arm64
           --config electron-builder.config.js
@@ -156,14 +144,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: pnpm
+          bun-version: 1.3.11
 
       - name: Install Linux build dependencies
         run: |
@@ -171,14 +155,14 @@ jobs:
           sudo apt-get install -y build-essential python3 libsecret-1-dev libnotify-dev
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Build app
-        run: pnpm build
+        run: bun run build
 
       - name: Package (linux x64)
         run: >
-          pnpm exec electron-builder
+          bunx electron-builder
           --linux --x64
           --config electron-builder.config.js
           --publish never
@@ -188,14 +172,14 @@ jobs:
 
       - name: Package (linux arm64)
         run: >
-          pnpm exec electron-builder
+          bunx electron-builder
           --linux --arm64
           --config electron-builder.config.js
           --publish never
 
       - name: Merge update manifests
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(bun -e "console.log(require('./package.json').version)")
           DIR="release/${VERSION}"
           # arm64 build overwrites latest-linux.yml — merge x64 entries back in
           if [ -f "latest-linux-x64.yml" ] && [ -f "${DIR}/latest-linux.yml" ]; then
@@ -213,7 +197,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(bun -e "console.log(require('./package.json').version)")
           TAG="${GITHUB_REF_NAME}"
           DIR="release/${VERSION}"
           for file in "${DIR}"/*.AppImage "${DIR}"/*.deb "${DIR}"/latest-linux.yml; do

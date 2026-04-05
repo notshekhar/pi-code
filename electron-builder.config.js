@@ -99,6 +99,9 @@ module.exports = {
   nodeGypRebuild: false,
   includePdb: false,
 
+  // macOS-only native dep; default rebuild fails for win/linux (cross-target / no prebuilds).
+  beforeBuild: "./scripts/before-electron-build.cjs",
+
   afterPack: afterPackHook,
 
   // --- macOS ---

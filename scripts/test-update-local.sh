@@ -49,8 +49,8 @@ echo "  package.json version set to $TEST_VERSION"
 
 # 2. Build
 echo ""
-echo "  Building (pnpm dist:mac)..."
-pnpm dist:mac
+echo "  Building (bun run dist:mac)..."
+bun run dist:mac
 
 # 3. Restore original version
 node -e "
